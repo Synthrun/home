@@ -631,8 +631,7 @@ button:focus-visible {
   padding: 2.2rem 2rem 1.2rem;
   text-align: left;
 }
-.svc-trigger:focus-visible,
-.team-trigger:focus-visible {
+.svc-trigger:focus-visible {
   outline: none;
 }
 .svc-num {
@@ -1049,18 +1048,42 @@ button:focus-visible {
 
 /* TEAM */
 .team-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  transform: translateZ(0);
+  cursor: grab;
+}
+.team-grid:active {
+  cursor: grabbing;
+}
+.team-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.team-grid::-webkit-scrollbar-thumb {
+  background: var(--rule);
+}
+.team-grid::-webkit-scrollbar-track {
+  background: transparent;
 }
 .team-card {
-  padding: 0;
+  flex: 1 1 0;
+  min-width: 240px;
+  max-width: 540px;
+  position: relative;
+  z-index: 1;
   border-right: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   background: transparent;
-  transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+  cursor: pointer;
   overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  scroll-snap-align: start;
+}
+.team-card.open {
+  z-index: 10;
 }
 .team-card:last-child {
   border-right: none;
@@ -1068,22 +1091,18 @@ button:focus-visible {
 .team-card:hover {
   background: var(--surface);
 }
-.team-trigger {
+.team-card-inner {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: none;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.8rem;
-  align-items: start;
-  text-align: left;
-  padding: 2.2rem;
+  align-items: stretch;
 }
 .team-summary {
-  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
 }
 .team-card::after {
   content: "";
@@ -1110,6 +1129,7 @@ button:focus-visible {
   place-items: center;
   margin-bottom: 1.4rem;
   background: linear-gradient(130deg, var(--off), transparent);
+  flex-shrink: 0;
 }
 .team-avatar svg {
   width: 28px;
@@ -1147,59 +1167,64 @@ button:focus-visible {
 }
 .team-expand {
   max-height: 0;
-  opacity: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.35s ease;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.team-card.open .team-expand {
+  max-height: 300px;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
 }
 .team-details {
-  margin: 0 2.2rem 1.8rem;
   border: 1px solid var(--rule);
   background: var(--surface);
-  transform: translateY(-8px);
-  transition: transform 0.36s ease;
+  padding: 2.2rem 2.2rem 2.2rem 0;
 }
 .team-detail-row {
   display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 1rem;
-  padding: 0.8rem 0.9rem;
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+  padding: 0.65rem 0.8rem;
   border-bottom: 1px solid var(--rule);
 }
-.team-detail-row:last-child {
+.team-detail-row:last-of-type {
   border-bottom: none;
 }
 .team-detail-row span {
-  font-size: 0.55rem;
+  font-size: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink3);
 }
 .team-detail-row p {
-  font-size: 0.66rem;
+  font-size: 0.6rem;
   color: var(--ink2);
-  line-height: 1.7;
+  line-height: 1.55;
 }
 .team-actions {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem;
+  gap: 0.5rem;
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid var(--rule);
 }
 .team-pill {
-  font-size: 0.56rem;
-  letter-spacing: 0.09em;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
   border: 1px solid var(--rule);
-  padding: 0.43rem 0.58rem;
+  padding: 0.32rem 0.45rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
+  white-space: nowrap;
 }
 .team-pill svg {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 .team-pill path {
   stroke: currentColor;
@@ -1208,61 +1233,6 @@ button:focus-visible {
 }
 .team-pill:hover {
   border-color: var(--ink3);
-}
-.team-toggle {
-  margin-left: auto;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--rule);
-  display: grid;
-  place-items: center;
-}
-.team-toggle svg {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.25s ease;
-}
-.team-toggle path {
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.5;
-}
-.team-card.open {
-  border-color: var(--ink3);
-}
-.team-card.open .team-expand {
-  max-height: 420px;
-  opacity: 1;
-}
-.team-card.open .team-details {
-  transform: translateY(0);
-}
-.team-card.open .team-toggle svg {
-  transform: rotate(180deg);
-}
-.team-link {
-  font-size: 0.6rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--ink3);
-  padding-bottom: 2px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: none;
-}
-.team-link svg {
-  width: 14px;
-  height: 14px;
-}
-.team-link path {
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 @keyframes riseIn {
@@ -1490,6 +1460,7 @@ footer {
 .rd2 { transition-delay: 0.14s; }
 .rd3 { transition-delay: 0.22s; }
 .rd4 { transition-delay: 0.3s; }
+.rd5 { transition-delay: 0.38s; }
 
 /* Interactive markers */
 .interactive:hover ~ .cur,
@@ -1511,7 +1482,6 @@ footer {
   .nav-logo,
   .nav-right a,
   .svc-trigger,
-  .team-trigger,
   .team-pill,
   .cta-btn,
   .cta-email,
@@ -1522,10 +1492,22 @@ footer {
   .hero-main,
   .hero-bottom,
   .process-grid,
-  .team-grid,
+  .team-grid {
+    display: flex;
+  }
   .cta-block,
   footer {
     grid-template-columns: 1fr;
+  }
+  .team-card {
+    flex: 1 1 0;
+    min-width: 70vw;
+    max-width: 90vw;
+  }
+  .team-card.open {
+    flex: 1 1 90vw;
+    min-width: 90vw;
+    max-width: 90vw;
   }
   .hero-left,
   .proc-col,
@@ -1547,7 +1529,6 @@ footer {
   .svc-trigger,
   .svc-cards,
   .svc-card,
-  .team-card,
   .cta-block,
   footer {
     padding: 1.6rem 1rem;
@@ -1586,15 +1567,19 @@ footer {
   .svc-card:last-child {
     border-bottom: none;
   }
-  .team-trigger {
+  .team-summary {
     padding: 1.6rem 1rem;
   }
   .team-details {
-    margin: 0 1rem 1.2rem;
+    padding: 1.6rem 1rem 1.6rem 0;
   }
+  .team-card { cursor: pointer; }
   .team-detail-row {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
+    gap: 0.25rem;
+    padding: 0.55rem 0.65rem;
+  }
+  .team-actions {
+    padding: 0.55rem 0.65rem;
   }
   .cta-right {
     align-items: flex-start;
@@ -1677,8 +1662,8 @@ footer {
       <div class="hero-left">
         <div class="hero-eyebrow">Architecture & App Reliability Studio - Est. 2026</div>
         <h1 class="hero-title">
-          <strong>Vibe-coded apps</strong><br>
-          <em>that actually ship.</em>
+          <strong>Building Products</strong><br>
+          <em>that are reliable</em>
         </h1>
       </div>
       <div class="hero-right">
@@ -2089,6 +2074,154 @@ footer {
           </div>
         </div>
       </div>
+      <div class="svc-row reveal rd5 interactive">
+        <button class="svc-trigger interactive" type="button" aria-expanded="false" aria-controls="svc-visibility">
+          <span class="svc-num">05 ——</span>
+          <div class="svc-name">AI Search &amp;<br><em>Visibility</em></div>
+          <p class="svc-desc">Make your brand visible in AI-generated answers, citations, and recommendations — across every LLM and search engine.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Search Visibility</span>
+            <span class="svc-tag">Prompt Intelligence</span>
+            <span class="svc-tag">Content Lab</span>
+            <span class="svc-tag">Analytics</span>
+          </div>
+          <span class="svc-toggle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+          </span>
+        </button>
+        <div class="svc-expand" id="svc-visibility">
+          <div class="svc-cards cases">
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M7 14c1.4-2.6 3.1-4 5.1-4s3.8 1.4 5.2 4"></path></svg>
+                </span>
+                <span class="svc-case-severity">Daily Tracking</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Search Visibility</h4>
+              <p class="svc-case-meta">AI citation monitoring</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>Know how AI sees your brand — visibility, position, and sentiment, tracked daily across every major LLM.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Clear brand positioning in AI</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4.5 18.5h15M7 15V9M12 15V6M17 15v-3"></path></svg>
+                </span>
+                <span class="svc-case-severity">Six Dimensions</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Page Optimization</h4>
+              <p class="svc-case-meta">AI citation readiness</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>Six-dimension audits that show why AI cites a page — or skips it. Fix the gaps blocking your content.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Higher AI citation rates</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4.5 7.5h15M4.5 12h15M4.5 16.5h10"></path></svg>
+                </span>
+                <span class="svc-case-severity">Buyer Intent</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Prompt Intelligence</h4>
+              <p class="svc-case-meta">AI search behavior</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>The exact questions buyers ask AI — and whether you're in the answer. Map prompts to your content strategy.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Show up in every relevant answer</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4.5 12h15M11 4.5 4.5 12 11 19.5"></path></svg>
+                </span>
+                <span class="svc-case-severity">Content Production</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Content Lab</h4>
+              <p class="svc-case-meta">AI-optimized publishing</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>From visibility gap to published post — content AI wants to cite. Research, write, optimize, publish.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Citable, authoritative content</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4.5 18.5h15M7 15V9M12 15V6M17 15v-3"></path></svg>
+                </span>
+                <span class="svc-case-severity">Competitive Intel</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Competitor Benchmarking</h4>
+              <p class="svc-case-meta">Share of voice in AI</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>See who AI recommends instead of you — share of voice, position, and gaps. Know exactly where you stand.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Outrank competitors in AI</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="2"></circle><circle cx="17" cy="8" r="2"></circle><circle cx="17" cy="16" r="2"></circle><path d="M8.8 11.2 15.2 8.8M8.8 12.8 15.2 15.2"></path></svg>
+                </span>
+                <span class="svc-case-severity">Actionable</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Action Center</h4>
+              <p class="svc-case-meta">Impact-ranked priorities</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>Know what to do next — every action ranked by impact, tracked to done. No guesswork, just execution.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Focused, high-impact execution</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="2"></circle><circle cx="16" cy="8" r="2"></circle><circle cx="16" cy="16" r="2"></circle><path d="M9.8 11.2 14.2 8.8M9.8 12.8 14.2 15.2"></path></svg>
+                </span>
+                <span class="svc-case-severity">Trust Signals</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Source Analytics</h4>
+              <p class="svc-case-meta">Domain authority in AI</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>The domains AI trusts when it answers — and how to become one. Build the authority signals that matter.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Become a cited source</strong></div>
+              </div>
+            </article>
+            <article class="svc-case-card">
+              <div class="svc-case-top">
+                <span class="svc-case-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="2.4"></circle><circle cx="16.5" cy="10.5" r="2"></circle><path d="M4.8 18.8c.9-2.2 2.4-3.5 4.2-3.5 1.9 0 3.4 1.3 4.3 3.5"></path></svg>
+                </span>
+                <span class="svc-case-severity">Bot Detection</span>
+              </div>
+              <span class="svc-case-kicker">Service</span>
+              <h4 class="svc-case-title">Visitor Analytics</h4>
+              <p class="svc-case-meta">AI bot traffic insights</p>
+              <div class="svc-case-solution">
+                <span>What You Get</span>
+                <p>See every AI bot and human visitor — the traffic GA4 misses. Understand who crawls your content and why.</p>
+                <div class="svc-case-impact"><span>Impact</span><strong>Full visibility into your audience</strong></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2128,27 +2261,45 @@ footer {
     </div>
     <div class="stack-content reveal rd1">
       <div class="stack-category">
-        <span class="stack-cat-label">ML & Deep Learning</span>
+        <span class="stack-cat-label">Languages &amp; Runtimes</span>
         <div class="stack-items">
-          <span class="stack-item interactive">Python</span><span class="stack-item interactive">PyTorch</span><span class="stack-item interactive">TensorFlow</span><span class="stack-item interactive">Scikit-learn</span><span class="stack-item interactive">XGBoost</span><span class="stack-item interactive">OpenCV</span>
+          <span class="stack-item interactive">Python</span><span class="stack-item interactive">TypeScript</span><span class="stack-item interactive">JavaScript</span><span class="stack-item interactive">Go</span><span class="stack-item interactive">Rust</span><span class="stack-item interactive">Node.js</span>
         </div>
       </div>
       <div class="stack-category">
-        <span class="stack-cat-label">MLOps & Pipelines</span>
+        <span class="stack-cat-label">Frontend &amp; Fullstack</span>
         <div class="stack-items">
-          <span class="stack-item interactive">MLflow</span><span class="stack-item interactive">W&amp;B</span><span class="stack-item interactive">Docker</span><span class="stack-item interactive">GitHub Actions</span><span class="stack-item interactive">n8n</span>
+          <span class="stack-item interactive">React</span><span class="stack-item interactive">Next.js</span><span class="stack-item interactive">Svelte</span><span class="stack-item interactive">Vue</span><span class="stack-item interactive">Tailwind</span>
         </div>
       </div>
       <div class="stack-category">
-        <span class="stack-cat-label">Cloud & Infrastructure</span>
+        <span class="stack-cat-label">Backend &amp; API</span>
         <div class="stack-items">
-          <span class="stack-item interactive">AWS EC2</span><span class="stack-item interactive">AWS S3</span><span class="stack-item interactive">Firestore</span><span class="stack-item interactive">Linux</span><span class="stack-item interactive">REST APIs</span>
+          <span class="stack-item interactive">FastAPI</span><span class="stack-item interactive">Django</span><span class="stack-item interactive">Express</span><span class="stack-item interactive">GraphQL</span><span class="stack-item interactive">REST</span><span class="stack-item interactive">WebSockets</span>
         </div>
       </div>
       <div class="stack-category">
-        <span class="stack-cat-label">Data & Visualisation</span>
+        <span class="stack-cat-label">AI / ML &amp; LLMs</span>
         <div class="stack-items">
-          <span class="stack-item interactive">Pandas</span><span class="stack-item interactive">NumPy</span><span class="stack-item interactive">SQL</span><span class="stack-item interactive">Power BI</span><span class="stack-item interactive">Matplotlib</span>
+          <span class="stack-item interactive">PyTorch</span><span class="stack-item interactive">TensorFlow</span><span class="stack-item interactive">LangChain</span><span class="stack-item interactive">Hugging Face</span><span class="stack-item interactive">OpenAI</span><span class="stack-item interactive">Vector DBs</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <span class="stack-cat-label">Databases &amp; Storage</span>
+        <div class="stack-items">
+          <span class="stack-item interactive">PostgreSQL</span><span class="stack-item interactive">SQLite</span><span class="stack-item interactive">MongoDB</span><span class="stack-item interactive">Redis</span><span class="stack-item interactive">S3</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <span class="stack-cat-label">Cloud &amp; Infrastructure</span>
+        <div class="stack-items">
+          <span class="stack-item interactive">AWS</span><span class="stack-item interactive">Cloudflare</span><span class="stack-item interactive">GCP</span><span class="stack-item interactive">Vercel</span><span class="stack-item interactive">Linux</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <span class="stack-cat-label">DevOps &amp; Observability</span>
+        <div class="stack-items">
+          <span class="stack-item interactive">Docker</span><span class="stack-item interactive">GitHub Actions</span><span class="stack-item interactive">Terraform</span><span class="stack-item interactive">MLflow</span><span class="stack-item interactive">Sentry</span>
         </div>
       </div>
     </div>
@@ -2161,7 +2312,7 @@ footer {
     </div>
     <div class="team-grid">
       <article class="team-card reveal rd1 interactive" data-tilt>
-        <button class="team-trigger interactive" type="button" aria-expanded="false" aria-controls="team-aditya">
+        <div class="team-card-inner">
           <div class="team-summary">
             <div class="team-avatar" aria-hidden="true">
               <img class="team-avatar-img" src="pfps/aditya/aditya_light.png" data-light="pfps/aditya/aditya_light.png" data-dark="pfps/aditya/aditya_dark.png" alt="" loading="lazy" decoding="async">
@@ -2170,24 +2321,21 @@ footer {
             <p class="team-role">ML Engineer and MLOps Practitioner</p>
             <p class="team-bio">Designs end-to-end ML systems from data pipelines to cloud-deployed inference workloads.</p>
           </div>
-          <span class="team-toggle" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-          </span>
-        </button>
-        <div class="team-expand" id="team-aditya">
-          <div class="team-details">
-            <div class="team-detail-row"><span>Focus</span><p>Self-supervised learning and deployment reliability.</p></div>
-            <div class="team-detail-row"><span>Recent Work</span><p>Intrusion detection, cloud automation, and vision.</p></div>
-            <div class="team-detail-row"><span>Speciality</span><p>Production-grade ML services.</p></div>
-            <div class="team-actions">
-              <a class="team-pill interactive" href="/aditya/aditya.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
-              <a class="team-pill interactive" href="#contact">Book Aditya</a>
+          <div class="team-expand">
+            <div class="team-details">
+              <div class="team-detail-row"><span>Focus</span><p>Self-supervised learning and deployment reliability.</p></div>
+              <div class="team-detail-row"><span>Recent Work</span><p>Intrusion detection, cloud automation, and vision.</p></div>
+              <div class="team-detail-row"><span>Speciality</span><p>Production-grade ML services.</p></div>
+              <div class="team-actions">
+                <a class="team-pill interactive" href="/aditya/aditya.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
+                <a class="team-pill interactive" href="#contact">Book Aditya</a>
+              </div>
             </div>
           </div>
         </div>
       </article>
       <article class="team-card reveal rd2 interactive" data-tilt>
-        <button class="team-trigger interactive" type="button" aria-expanded="false" aria-controls="team-ashray">
+        <div class="team-card-inner">
           <div class="team-summary">
             <div class="team-avatar" aria-hidden="true">
               <img class="team-avatar-img" src="pfps/ashray/ashray_light.png" data-light="pfps/ashray/ashray_light.png" data-dark="pfps/ashray/ashray_dark.png" alt="" loading="lazy" decoding="async">
@@ -2196,24 +2344,21 @@ footer {
             <p class="team-role">Product Management and AI</p>
             <p class="team-bio">Leads cross-functional execution with product strategy, analytics, and technical prototyping.</p>
           </div>
-          <span class="team-toggle" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-          </span>
-        </button>
-        <div class="team-expand" id="team-ashray">
-          <div class="team-details">
-            <div class="team-detail-row"><span>Focus</span><p>Stakeholder alignment, KPI planning, and launch ops.</p></div>
-            <div class="team-detail-row"><span>Recent Work</span><p>Led TEDx and CSI with multi-team execution.</p></div>
-            <div class="team-detail-row"><span>Speciality</span><p>Business context plus technical fluency.</p></div>
-            <div class="team-actions">
-              <a class="team-pill interactive" href="/ashray/ashray.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
-              <a class="team-pill interactive" href="#contact">Book Ashray</a>
+          <div class="team-expand">
+            <div class="team-details">
+              <div class="team-detail-row"><span>Focus</span><p>Stakeholder alignment, KPI planning, and launch ops.</p></div>
+              <div class="team-detail-row"><span>Recent Work</span><p>Led TEDx and CSI with multi-team execution.</p></div>
+              <div class="team-detail-row"><span>Speciality</span><p>Business context plus technical fluency.</p></div>
+              <div class="team-actions">
+                <a class="team-pill interactive" href="/ashray/ashray.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
+                <a class="team-pill interactive" href="#contact">Book Ashray</a>
+              </div>
             </div>
           </div>
         </div>
       </article>
       <article class="team-card reveal rd3 interactive" data-tilt>
-        <button class="team-trigger interactive" type="button" aria-expanded="false" aria-controls="team-ayush">
+        <div class="team-card-inner">
           <div class="team-summary">
             <div class="team-avatar" aria-hidden="true">
               <img class="team-avatar-img" src="pfps/ayush/ayush_light.png" data-light="pfps/ayush/ayush_light.png" data-dark="pfps/ayush/ayush_dark.png" alt="" loading="lazy" decoding="async">
@@ -2222,24 +2367,21 @@ footer {
             <p class="team-role">AI/ML Engineer and Full-Stack Developer</p>
             <p class="team-bio">Builds full-stack AI products with LLM inference, microservices, and reliable deployment.</p>
           </div>
-          <span class="team-toggle" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-          </span>
-        </button>
-        <div class="team-expand" id="team-ayush">
-          <div class="team-details">
-            <div class="team-detail-row"><span>Focus</span><p>Product-first AI engineering and full-stack architecture.</p></div>
-            <div class="team-detail-row"><span>Recent Work</span><p>Fintech and career-tech apps with Go, FastAPI, React, and LLMs.</p></div>
-            <div class="team-detail-row"><span>Speciality</span><p>UI to backend delivery.</p></div>
-            <div class="team-actions">
-              <a class="team-pill interactive" href="/ayush/ayush.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
-              <a class="team-pill interactive" href="#contact">Book Ayush</a>
+          <div class="team-expand">
+            <div class="team-details">
+              <div class="team-detail-row"><span>Focus</span><p>Product-first AI engineering and full-stack architecture.</p></div>
+              <div class="team-detail-row"><span>Recent Work</span><p>Fintech and career-tech apps with Go, FastAPI, React, and LLMs.</p></div>
+              <div class="team-detail-row"><span>Speciality</span><p>UI to backend delivery.</p></div>
+              <div class="team-actions">
+                <a class="team-pill interactive" href="/ayush/ayush.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
+                <a class="team-pill interactive" href="#contact">Book Ayush</a>
+              </div>
             </div>
           </div>
         </div>
       </article>
       <article class="team-card reveal rd4 interactive" data-tilt>
-        <button class="team-trigger interactive" type="button" aria-expanded="false" aria-controls="team-devansh">
+        <div class="team-card-inner">
           <div class="team-summary">
             <div class="team-avatar" aria-hidden="true">
               <img class="team-avatar-img" src="pfps/devansh/devansh_light.png" data-light="pfps/devansh/devansh_light.png" data-dark="pfps/devansh/devansh_dark.png" alt="" loading="lazy" decoding="async">
@@ -2248,18 +2390,38 @@ footer {
             <p class="team-role">AI/ML Engineer and Generative AI Practitioner</p>
             <p class="team-bio">Builds NLP systems, retrieval pipelines, and intelligent document workflows with LLM tooling.</p>
           </div>
-          <span class="team-toggle" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-          </span>
-        </button>
-        <div class="team-expand" id="team-devansh">
-          <div class="team-details">
-            <div class="team-detail-row"><span>Focus</span><p>RAG systems, multilingual NLP, and prompt tuning.</p></div>
-            <div class="team-detail-row"><span>Recent Work</span><p>Document intelligence and practical ML builds.</p></div>
-            <div class="team-detail-row"><span>Speciality</span><p>Context-aware AI pipelines.</p></div>
-            <div class="team-actions">
-              <a class="team-pill interactive" href="/devansh/devansh.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
-              <a class="team-pill interactive" href="#contact">Book Devansh</a>
+          <div class="team-expand">
+            <div class="team-details">
+              <div class="team-detail-row"><span>Focus</span><p>RAG systems, multilingual NLP, and prompt tuning.</p></div>
+              <div class="team-detail-row"><span>Recent Work</span><p>Document intelligence and practical ML builds.</p></div>
+              <div class="team-detail-row"><span>Speciality</span><p>Context-aware AI pipelines.</p></div>
+              <div class="team-actions">
+                <a class="team-pill interactive" href="/devansh/devansh.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
+                <a class="team-pill interactive" href="#contact">Book Devansh</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="team-card reveal rd5 interactive" data-tilt>
+        <div class="team-card-inner">
+          <div class="team-summary">
+            <div class="team-avatar" aria-hidden="true">
+              <img class="team-avatar-img" src="pfps/saniya/saniya_light.png" data-light="pfps/saniya/saniya_light.png" data-dark="pfps/saniya/saniya_dark.png" alt="" loading="lazy" decoding="async">
+            </div>
+            <h3 class="team-name">Saniya Saw</h3>
+            <p class="team-role">AI &amp; ML Developer and Android Engineer</p>
+            <p class="team-bio">Builds accessible AI systems for health, vision, and business intelligence — from on-device CNNs to automated analytics.</p>
+          </div>
+          <div class="team-expand">
+            <div class="team-details">
+              <div class="team-detail-row"><span>Focus</span><p>Accessibility-driven AI and health informatics.</p></div>
+              <div class="team-detail-row"><span>Recent Work</span><p>Color blindness detection, plant disease CNNs, text narration for visually impaired.</p></div>
+              <div class="team-detail-row"><span>Speciality</span><p>Applied ML with mobile deployment.</p></div>
+              <div class="team-actions">
+                <a class="team-pill interactive" href="/saniya/saniya.html">Full profile <svg viewBox="0 0 24 24"><path d="M5 12h14M13.5 5.5 20 12l-6.5 6.5"></path></svg></a>
+                <a class="team-pill interactive" href="#contact">Book Saniya</a>
+              </div>
             </div>
           </div>
         </div>
@@ -2504,16 +2666,16 @@ footer {
 
   const teamCards = Array.from(document.querySelectorAll('.team-card'));
   teamCards.forEach((card) => {
-    const trigger = card.querySelector('.team-trigger');
-    if (!trigger) return;
-    trigger.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
       const willOpen = !card.classList.contains('open');
-      if (!willOpen) {
-        card.classList.remove('open');
-        trigger.setAttribute('aria-expanded', 'false');
-        return;
-      }
-      setAccordionState(teamCards, card, 'open');
+      teamCards.forEach((c) => {
+        if (c === card && willOpen) {
+          c.classList.add('open');
+        } else {
+          c.classList.remove('open');
+        }
+      });
     });
   });
 
