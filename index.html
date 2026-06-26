@@ -2543,10 +2543,12 @@ footer {
     window.scrollTo({ top, behavior });
   }
 
+  document.addEventListener('DOMContentLoaded', () => {
+    loader.classList.add('hidden');
+  });
   window.addEventListener('load', () => {
-    setTimeout(() => loader.classList.add('hidden'), 500);
     if (window.location.hash) {
-      setTimeout(() => scrollToHashTarget(window.location.hash, 'auto'), 10);
+      scrollToHashTarget(window.location.hash, 'auto');
     }
   });
 
