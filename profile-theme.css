@@ -479,6 +479,45 @@ nav {
   .block:nth-child(odd) { border-right: none; }
 }
 
+@media (max-width: 640px) {
+  body {
+    padding: calc(var(--nav-height) + 0.6rem) 0.6rem 0.6rem;
+  }
+  .sidebar {
+    padding: 1rem;
+  }
+  .name {
+    font-size: 1.6rem;
+  }
+  .headline {
+    font-size: 1.4rem;
+  }
+  .role {
+    margin-bottom: 0.8rem;
+  }
+  .main {
+    padding: 1rem;
+  }
+  .image-placeholder {
+    max-width: 100%;
+  }
+  .key-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+  .event {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+  .contact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pill {
+    text-align: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

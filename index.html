@@ -480,6 +480,7 @@ button:focus-visible {
   color: var(--ink2);
   max-width: 340px;
   font-weight: 300;
+  margin-top: 12px;
 }
 .hero-desc strong {
   color: var(--ink);
@@ -1499,9 +1500,54 @@ footer {
   .footer-logo {
     cursor: pointer;
   }
-  .hero-main,
-  .hero-bottom,
-  .process-grid,
+  .hero-eyebrow { display: none; }
+  .hero-right .cta-email { display: none; }
+  .hero-index { display: none; }
+  .hero {
+    grid-template-rows: 1fr auto;
+  }
+  .hero-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: none;
+  }
+  .hero-left {
+    flex: none;
+    border-bottom: none;
+    border-right: none;
+    justify-content: flex-start;
+  }
+  .hero-right {
+    flex: none;
+    justify-content: flex-start;
+    border-top: none;
+  }
+  .hero-desc {
+    max-width: none;
+  }
+  .hero-bottom {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    flex: 1 1 50%;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-stat:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+  .process-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .proc-col {
+    flex: 1 1 50%;
+    border-bottom: 1px solid var(--rule);
+  }
+  .proc-col:nth-last-child(2) {
+    border-bottom: none;
+  }
   .team-grid {
     display: flex;
   }
@@ -1529,8 +1575,12 @@ footer {
   footer {
     border-right: none;
   }
-  .hero-left,
-  .hero-right,
+  .hero-left {
+    padding: 1.6rem 1rem 0.5rem;
+  }
+  .hero-right {
+    padding: 0 1rem 1.6rem;
+  }
   .hero-stat,
   .proc-col,
   .stack-label-col,
@@ -1596,6 +1646,88 @@ footer {
   }
   footer { gap: 1rem; }
   .to-top { cursor: pointer; }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+  }
+  .proc-col {
+    flex: 1 1 100%;
+  }
+  .proc-col:nth-last-child(2) {
+    border-bottom: 1px solid var(--rule);
+  }
+  .proc-col:last-child {
+    border-bottom: none;
+  }
+  .stat-val {
+    font-size: 1.3rem;
+  }
+  .stat-label {
+    font-size: 0.52rem;
+  }
+  .section-h {
+    font-size: 1.4rem;
+  }
+  .svc-name {
+    font-size: 1.1rem;
+  }
+  .svc-row .svc-trigger {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+  .svc-desc {
+    font-size: 0.7rem;
+  }
+  .cta-title {
+    font-size: 1.8rem;
+  }
+  .team-card {
+    min-width: 86vw;
+    max-width: 86vw;
+  }
+  .team-card.open {
+    min-width: 86vw;
+    max-width: 86vw;
+  }
+  .hero-left {
+    padding: 1.1rem 0.85rem 0.3rem;
+  }
+  .hero-right {
+    padding: 0 0.85rem 1.1rem;
+  }
+  .hero-stat,
+  .proc-col,
+  .stack-label-col,
+  .stack-content,
+  .section-header,
+  .svc-trigger,
+  .svc-cards,
+  .svc-card,
+  .cta-block,
+  footer {
+    padding: 1.1rem 0.85rem;
+  }
+  .team-summary {
+    padding: 1.1rem 0.85rem;
+  }
+  .team-details {
+    padding: 1.1rem 0.85rem 1.1rem 0;
+  }
+  .cta-block {
+    gap: 2rem;
+  }
+  footer {
+    gap: 0.75rem;
+  }
+  .stack-items {
+    gap: 0.2rem;
+  }
+  .stack-item {
+    margin-right: 0.8rem;
+    font-size: 0.68rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1678,7 +1810,7 @@ footer {
       </div>
       <div class="hero-right">
         <p class="hero-desc">
-          We make sure your vibe-coded app or website works seamlessly. Architecture-first reviews, fixes, performance tuning, and deployment.
+          Architecture-first reviews, fixes, performance tuning, and deployment for your applications and services.
         </p>
         <a href="mailto:hello@synthrun.site" class="cta-email interactive">hello@synthrun.site</a>
         <div class="hero-index">
