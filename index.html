@@ -591,6 +591,41 @@ button:focus-visible {
   font-style: italic;
   color: var(--ink3);
 }
+.section-copy {
+  padding: 0 2rem 2rem;
+}
+.newsletter-copy {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--ink2);
+}
+.newsletter-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  max-width: 52rem;
+}
+.newsletter-form input[type="email"] {
+  width: 100%;
+  min-width: 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.35rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.95rem;
+}
+.newsletter-form input[type="email"]::placeholder {
+  color: var(--ink3);
+}
+.newsletter-form input[type="email"]:focus {
+  outline: 1px solid var(--ink3);
+}
 
 /* SERVICES TABLE */
 .services-table { width: 100%; }
@@ -2633,6 +2668,22 @@ footer {
       </div>
     </div>
   </section>
+
+  <section class="section" id="newsletter">
+    <div class="section-header reveal">
+      <span class="section-label">Stay Updated</span>
+      <h2 class="section-h">Get the <em>Architecture Checklist</em></h2>
+    </div>
+    <div class="section-copy">
+      <p class="newsletter-copy">10-point checklist for shipping AI-built apps to production. Straight to your inbox, no spam.</p>
+      <form class="newsletter-form" action="FORM_ACTION_URL" method="POST" target="_blank">
+        <input type="email" name="EMAIL" required placeholder="Email address">
+        <input type="hidden" name="isEmailAddress" value="true">
+        <input type="hidden" name="locale" value="en">
+        <button type="submit" class="cta-btn interactive">Subscribe</button>
+      </form>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -2643,6 +2694,7 @@ footer {
     <a href="#stack" class="interactive">Stack</a>
     <a href="#team" class="interactive">Team</a>
     <a href="#contact" class="interactive">Contact</a>
+    <a href="#newsletter" class="interactive">Newsletter</a>
   </div>
   <span class="footer-copy">© 2026 Synthrun · India · Serving US & UK</span>
 </footer>
